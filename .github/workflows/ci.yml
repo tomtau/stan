@@ -102,22 +102,38 @@ jobs:
   # As at 2025-11-05, the GitHub-hosted runner for ubuntu-latest comes with
   # Stack 3.7.1 and GHC 9.12.2.
   stack:
-    name: stack / ghc ${{ matrix.ghc }}
-    runs-on: ubuntu-latest
+    name: stack / ${{ matrix.os }} / ghc ${{ matrix.ghc }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        ghc: ["9.10.3"] # The version specified in the stack.yaml file
-        cache-bust: ["2025-07-14"]
+        include:
+          - os: ubuntu-latest
+            ghc: "9.10.3"
+            stack-yaml: stack.yaml
+            cache-bust: "2025-07-14"
+          - os: macos-13
+            ghc: "8.8.1"
+            stack-yaml: stack-ghc-8.8.1.yaml
+            cache-bust: "2025-07-14"
+
+    env:
+      STACK_YAML: ${{ matrix.stack-yaml }}
 
     steps:
     - name: Clone project
       uses: actions/checkout@v4
 
+    - name: Setup Haskell
+      uses: haskell-actions/setup@v2
+      with:
+        enable-stack: true
+        stack-no-global: true
+
     - name: Cache the Stack root
       uses: actions/cache@v4
       with:
         path: ~/.stack
-        key: ${{ runner.os }}-${{ hashFiles('stack.yaml') }}-${{ matrix.cache-bust }}
+        key: ${{ runner.os }}-${{ matrix.ghc }}-stack-${{ matrix.cache-bust }}
 
     - name: Build everything
       run: |
