@@ -1,6 +1,6 @@
-snapshot: lts-16.31 # GHC 8.8.4
+snapshot: lts-16.31 # GHC 8.8.4 package set, compatible with 8.8.1
 compiler: ghc-8.8.1
-compiler-check: match-minor
+compiler-check: match-minor # Allow 8.8.1 with the 8.8.4 snapshot
 
 extra-deps:
   - base64-0.4.2.4

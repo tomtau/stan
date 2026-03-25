@@ -133,7 +133,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/.stack
-        key: ${{ runner.os }}-${{ matrix.ghc }}-stack-${{ matrix.cache-bust }}
+        key: ${{ runner.os }}-${{ matrix.ghc }}-stack-${{ hashFiles(matrix.stack-yaml) }}-${{ matrix.cache-bust }}
 
     - name: Build everything
       run: |
