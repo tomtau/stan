@@ -106,18 +106,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        include:
-          - os: ubuntu-latest
-            ghc: "9.10.3"
-            stack-yaml: stack.yaml
-            cache-bust: "2025-07-14"
-          - os: macos-13
-            ghc: "8.8.1"
-            stack-yaml: stack-ghc-8.8.1.yaml
-            cache-bust: "2025-07-14"
-
-    env:
-      STACK_YAML: ${{ matrix.stack-yaml }}
+        stack-yaml: ["stack.yaml"]
+        ghc: ["9.10.3"]
+        cache-bust: ["2025-07-14"]
+        os: [ubuntu-latest, macOS-latest]
 
     steps:
     - name: Clone project
@@ -133,7 +125,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/.stack
-        key: ${{ runner.os }}-${{ matrix.ghc }}-stack-${{ hashFiles(matrix.stack-yaml) }}-${{ matrix.cache-bust }}
+        key: ${{ runner.os }}-${{ matrix.ghc }}-stack-${{ hashFiles('stack.yaml') }}-${{ matrix.cache-bust }}
 
     - name: Build everything
       run: |
